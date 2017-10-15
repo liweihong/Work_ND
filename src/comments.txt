@@ -1,0 +1,47 @@
+File: To-Do List
+
+Group: fsoft and varvel sync
+
+merge - commented out cfg_free_basic_blk, need to uncomment out later, set the FRANJO_IS_WORKING
+intProc - INCLUDE_SRANGE are not guarding ipSrangeDomain.cc
+smt_model - cfg_verisol.c MEMORY_LEAKS is defined in fsm2cfg.h
+
+* SMT for varvel: list all the files and changes of SA, tbench for SMT; Path Balancing; Grouping
+
+Group: Ideas
+some new ideas to be trying...
+
+Code Understanding:
+  
+  Write a softare to generate document from the source code directly?
+  Should have semantic info based on some pre-defined APIs, just like
+  people read a new maintenance code.
+
+
+Group: To-Do List
+
+* SMT for varvel: list all the files and changes of SA, tbench for SMT; Path Balancing; Grouping
+1. - Do the varvel control flow of sync_branch later.
+2. - Document a lit bit of the functions and files changed.
+
+* Develop the installation package for Varvel SMT package, mainly for yices download  
+
+Group: Old List
+
+LIST OF CURRENT WORK:
+* by Mid April, finish the witness interface condition/ Assumption
+* pthreading on both LINUX and Solaris
+	* MPI for parallel
+	* Q: can BMC or HBMC be parrellized since there are a lot of static int ?
+* Loop unrolling testing/array detection/ PI reading/ unrolling from the end
+* Terminate TBENCH when timeout of MES? / fixing the bug on bugzilla, using my_system?
+* SMT <=> MIX, changing of Tunelling flow??? call twice of fsoft?
+	* Test MIX with Balaced path on MEM-OUT cases
+	* Add API for Regular and TSR MIX_HBMC (add mix_ext.h, separate mix and hbmc package)
+	* Test Bench generation for this.
+	  compute the weakest precondition on this.
+* bugZilla(d4) bug 306
+* batch mode tbench on distributed mode
+* Franjo_mix example for hunter_ project. problem: Internal Error for MES
+* ~ivancic/bugs/NIST/890/cleanedArg.run
+* 64 bits - with Nadia

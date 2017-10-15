@@ -1,0 +1,226 @@
+File: Reports
+
+Group: Jun 2009
+The June of 2009
+
+[HARD ONES]:
+
+1. If changing the outgoing guards like this:
+     -----------
+    | main exit |
+     -----------
+   /p>0 | q>0 |r>0 \ s>0
+  /     |     |     \
+        ---------
+       |  ERROR  |
+        ---------
+    How does this affect BMC_NF and Witness Generation?
+
+2. For sync_branch sprintf changes, how does the simpleSwitch/availExpr affect the examples
+   of /fsoft/nsoft/headbuild/fromJapan/TP/BackEnd/M/t.A001.c.witness18 in
+   /fsoft/nsoft/headbuild/fromJapan/TP/SPRINTF_vs_PICF.txt
+
+3. Merging of fsoft and varvel
+   The consistance checking:
+   *. For all the compile flag, e.g., CFG_PRE_SLICE in fsoft, make sure it is also in varvel
+   *. For all logs in ViewVC, make sure all checkins with keywords (pre slic/preslic/PRE_SLICE) 
+      are added into varvel.
+   *. For new features with trac item #, check it.
+
+[TASKS]:
+
+Chao - Atomicity violation detection.
+Chao - MIX non-linear division handling (fix the bug from Naoto).
+Chao - Extend the pthread routines (semaphore first)
+Franjo - trac item #1394 for witness generation of assumption propogation.
+tbench - simulation on final model when simulator leads to a dead-end.
+         It's under CFG_TBench_Load. It went thru the example of ~bugs/01_hui_tbench/ttt and 
+	 ~/bugs/franjo/bugWithTbench/ttt_buggy_func. But there is no assignment or true condition on the 
+	 webage.
+Franjo - Add the constant ONE in cfg_blif.c::cfg_prog_var_latch for tbench to infer the value of vars.
+         Hold: per the commit on 7/28/09 by Franjo, the backward assumption propagation is withdrawn, 
+	       so do not do this until he figured out a way to set the initial value of vars.
+Nadia  - Simulation to dead-end examples at:
+         file:///testing/results/srirams-benchmarks/nec-confidential/HolonEnterprise/V13.0/src/ntin/bg_cmp/bg_cmp/Cecmp/src/fsoft/witRank.html
+	 file:///testing/results/srirams-benchmarks/nec-confidential/fuse_kernel/fsoft/witRank.html
+
+[NEC]:
+
+10/12 - sprintf cil handling. Solution: 1. update stubimpl.h/.c in bin/config (where is the original place?) 
+        2. update fsft_string_checker.h 3. comment out *string_checker.c
+	*. side effect: without --cil-edg-plus-fsoft, cil reported error on strlen(). The reason is that
+	edgcil will write strlen() to strlen(int *i, str), which is different from fsoft rewriting -
+	strlen(int, str). so, no matter what, let's fsoft do first (no matter this flag is used or not).
+	Also, for the simpleSwitch/availExpression, removed due to modeling of the error blocks. 
+
+08/18,19 - changed the bmc_nf on merging according to Franjo's suggestion. Run regression and generate reports.
+08/06 - Fixed bugs in BMC_NF, including .blf/.nop overwritten after merging; constraint file was wrong due to
+        no update on CFG_BASIC_BLOCK::sequence_number_org; group file generation after merging; different 
+	process when cfg_mergeKeepFuncBoundary is 0/1;
+
+07/27 - CFG_TBench_Load on simulation on final model
+07/10 - Checked in the changes in FSoft into varvel. Franjo's MIX flow issue.
+        (due to pre_slice and pi_const conflict, the model is bigger and MIX memout. 
+	so no prp file generated for MC)
+
+06/26 - work on 1424
+06/25 - work on trac 1405; excel report 04 negod BMC_NF witness;
+06/24 - work on MIX witness concretizable issue.
+06/23 - work on new HBMC+MIX framework;
+06/22 - work on new HBMC+MIX framework;
+
+06/19 - work on new HBMC+MIX framework;
+06/18 - work on new HBMC+MIX framework;
+06/17 - work on new HBMC+MIX framework;
+06/16 - work on new HBMC+MIX framework;
+06/15 - Checked in Trac 1355; 1094; 1031; starting new HMC+MIX;
+
+06/12 - Trac 1094: add the Functioncall node in the xml report of witness trace.
+06/11 - Trac 1094: add the Functioncall node in the xml report of witness trace.
+06/10 - Trac 1094: add the Functioncall node in the xml report of witness trace.
+06/09 - Trac 1355: change BMC_NF flow to print out model before merging.
+06/08 - Completed the Trac Item 1031.
+
+06/05 - Review the paper and PI constant folding XML.
+06/04 - Run experiments for FMCAD paper ( cancelled ).
+06/03 - Fixed the bug of HBMC_MIX integration for init symbolic (without data, only control states).
+06/02 - Help Nadia is build fsoft bin in sync_branch; Review chao's paper, malay's paper;
+06/01 - Paper review request from Chao; RhiShi debug program; Explain the data to Malay;
+
+[CUNY]:
+
+06/25 - Work on the 4 more point cloud
+06/24 - Write up the rectification in thesis.
+06/23 - Write up the rectification in thesis.
+06/22 - Try to rectify scans;
+
+06/19 - Try to rectify scans;
+06/18 - Try to rectify scans;
+06/17 - Try to combine two directions into a model.
+06/16 - Try to combine two directions into a model.
+06/15 - BPA on inner slices.
+
+06/12 - Confused by the stamos's line set email.
+06/11 - Confused by the stamos's line set email.
+06/10 - Confused by the stamos's line set email.
+06/09 - Sliced the dataset of GCT
+06/08 - Found a problem for all Stamos's dataset - not rectified.
+
+06/05 - Finished combining the Thomas hunter and Hunter theater.
+06/04 - Added mask images for the dataset of Thomas hunter
+06/03 - Rerun the regression on Thomas building; (TODO: add mask images for this dataset).
+06/02 - Rerun the regression on Thomas hunter's building; Fix the problem of error in theater dataset;
+06/01 - Generate the two tables with time column; generate the error images of Hunter Theater.
+
+
+Group: Dec 2008
+The last month of 2008.
+
+:
+
+WATCHING:
+
+dotty mouse issue - console mouse service is down
+
+run "system-config-mouse" to enable it? - No. "Num Lock" buttom to switch on/off.
+
+
+ONGOING:
+
+~/bugs/cache6/work/A/main:
+
+try merging to debug why the condition is false, so that for-ever loop is found.
+
+Try malay's HBMC+MIX on this example
+/home/st/nadiap/testing
+
+TODO
+
+[HBMC TESSA tbench bug]: 
+~bugs/GetInputValues
+
+issue: seg fault when printf("%LE");
+
+[CTP Visualization]:
+1 - reserve the RED color for data race, issue blocks.(Aarti)
+2 - group the verticle adjancet blocks to one lock. (Franjo)
+3 - dynamically update the dotty file (Chao)
+
+[function depth of tbench]:
+
+[Franjo's weakest precondition]:
+The issue is (ite expr too loooog -- email on 12/1).
+
+[parallel tbench files, props.xml]:
+
+[Chao's new flow of MIX]:
+
+:
+
+March: [Chao's yices API & C3]; [dead-end change on suggestion of Aarti];
+
+:
+
+02/24 - low priority: Assumption computation; first weakest precondition, then check if the var on which a assumption is based is in the expressions of weakest precondition, keep it; otherwise drop it.
+:
+02/03 - Release the second edition to Mukaiyama-san;
+02/02 - run the experiments with Malay.
+:
+01/30 - check in the libverisol.a to sync_brach.
+01/29 - Fix the bug of malay's experiece, be prepared to release again.
+01/28 - Work on 792 sync_branch integration. sit in the class.
+01/27 - Work on the Malay's experiments, generate report. Read papers.
+01/26 - In NYC meeting with CCNY
+:
+01/23 - Work on the 792 sync_branch integration.
+01/22 - Work on malay's experiments.
+01/21 - Work on 792 sync_branch integration. sit in the class.
+01/20 - Read Chao's paper; Sriram's paper; Franjo's 1105 bug fixing; sit in the class;
+01/19 - Run more regression test on Malay's testing; Read Chao's paper;
+:
+01/16 - Released fsoft 792 and checked in CFG read/write;
+01/15 - Released the HBMC/MIX sync_branch to the Mukayama-san;
+01/14 - Fixing bugs on regression test of sync_branch;
+01/13 - working on release;
+01/12 - BUG FIXING for new_lib of bmc_nf; MIX timeout issue; cfg_backup MACRO isssue; 792 XML issue;
+:
+01/09 - CFG_backup on sync; Implement the 792 XML report of PI-Constantfolding&MC trace;
+01/08 - fix a new bug from 792; tried the new flag from Malay; run the regression testing on d4; talk by Joan.
+01/07 - Malay's new smt libary on d4; Naoto's loop unrolling;
+01/06 - chao's new idea on MIX timeout of sync.
+01/05 - test Chao's MIX sync integration, give a longer time limitation; show Malay's the problem
+        of report (5/2 wit/proof); Franjo's shows two tasks (792/CFG_backup)
+:
+12/22 - Chao's new flow of MIX;
+
+12/19 - emacs autocomplete; smt bug of dead-end simulation (writing out the .mrg); 
+12/18 - fix a dead-end problem on PI, as well as value load from CSV file; pizza talk
+12/17 - dead-end change on suggestion of Aarti;
+12/16 - discuss the report with Malay; xxx;
+12/15 - off to NYC
+:
+12/12 - weakest precond issue, no solution yet; starting working on dead-end & function depth;
+12/11 - interview Shashi, talk & lunch; xxx;
+12/10 - MIX sync works (both tbench & top.xml); 
+12/9 - dead-end, put the remaining block id in html/xml; interview Jing; Chao'request on yices API and C3;
+12/8 - two issues: mix & local.cnt in bmc_all_40_60; interview Gaurav; run sync_bmc_new;
+:
+12/5 - fsoft_fl.rng.log for HBMC of engine HBC; HBMC/MIX sync_branch; C3 with Chao&Malay
+12/4 - tbench # of functions; bug fixing by Malay; GM;
+12/3 - HBMC on sync_branch; FY09 report; monthly report;
+12/2 - Franjo's new issue on assumption; FY09 report
+12/1 - Perl script writing for report
+
+Group: Nov 2008
+First report created.
+
+:
+
+*Projects touched*
+
+1. - regression test for smt/property grouping/path balancing
+2. - controller for hbmc
+
+
+
+

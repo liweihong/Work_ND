@@ -1,0 +1,22 @@
+Crash Message:
+
+   Couldn't open input file /home/st/weihong/infor/Natural_Doc/src/.#project.txt
+
+Current Action:
+
+   Parsing /home/st/weihong/infor/Natural_Doc/src/.#project.txt
+
+Natural Docs version 1.4
+Perl version 5.8.5 on linux
+
+Command Line:
+
+   -i src -img src -o FramedHTML html -p ndoc
+
+Stack Trace:
+
+   NaturalDocs::Error::CatchDeath, called from
+   NaturalDocs::Languages::Simple::ParseFile, line 167, called from
+   NaturalDocs::Parser::Parse, line 334, called from
+   NaturalDocs::Parser::ParseForInformation, line 94, called from
+   (eval), line 353 of /home/st/weihong/Projects/DiVer/NaturalDocs/NaturalDocs

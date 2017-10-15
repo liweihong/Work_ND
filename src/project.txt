@@ -1,0 +1,1327 @@
+File: Description
+
+Group: LLVM & CLANG Tools
+
+*Resources*
+
+http://www.therareair.com/2008/09/26/tutorial-how-to-static-analyze-your-objective-c-code-using-the-clang-static-analyzer-tool/
+
+http://d5/grouponly/public_html/2011-04-07-5/
+
+The installed machine is vd2.
+
+The installed folder: /testing/results/weihong/tools/Clang. 
+
+To run the tool: "scan-build -o results -v gcc -c array2.c memory2.c" 
+
+
+Group: GIRA Related
+All projects related to CIL or C++ projects
+
+:
+
+*Locations:*
+
+/home/st/weihong/Projects/GIRA
+
+/testing/results/weihong/sync_branch/sync_branch_gira_tbench/
+
+:
+
+*Experiments:*
+
+local function examples - ~/Projects/GIRA/examples/
+benchmarks - /testing/results/naoto/prakash/paper-samples
+local real examples - /testing/results/weihong/debug/tbench_memleak_naoto -- /testing/results/naoto/prakash/paper-samples/ex1-bintree-duplicate/fsoft-exp/main
+local toy examples - ~/Projects/GIRA/tbench/test
+
+:
+
+*Goal:*
+
+What are the meaning information to SHOW to users
+
+Exceptions - show witness at both throw and catch location.
+Virtual Functions - show example functions causing the bug.
+Object Hierarchy (Inheritance) - show constructor/destructor etc.
+Examples - ~/Projects/GIRA/examples/
+
+:
+
+*Main issues:*
+
+1. - some bugs are detected at the chromed code where there is no explicit code in targe code.
+   solution: show some indication at constuctor, destructor, function return, exception throw where
+      implicit code are executed automatically.
+      Also, show a symbol around with an hyperlink saying the principle of the c++ code.
+2. - some assignment in path slicing are introduced by chrome model, such as switch for choosing correct
+   class or virtual functions. 
+   solution: these assignments should not be shown in HTML.
+3. - the names of member functions of classes are mangled, needs to be demangled.
+
+:
+
+*Other issues:*
+
+1. - in the ex, /home/st/weihong/Projects/GIRA/examples/virt_func/ex1, the virtual functions of both
+   parent and derived class are called.
+2. - for the ex in 1., the witness trace shows a line # which is beyond the whole array.cpp.
+3. - in the drop-down menu [info], xxx is type of NUM: replace NUM with a string.
+
+
+:
+
+*Repositories:*
+
+gira_edg - file:///home/st/bgogul/repos/projects/gira/trunk/gira
+cil_cpp  - file:///storage/forInterns/cilpp
+
+:
+
+*Building:*
+
+gira_edg - src/ocamlinterface, this is for building libraries.
+gira_edg - src/Makefile, this is for building stand-alone ?
+
+cil_cpp - copy the gira libraries into ocaml-cilpp/giraocxltr; set LD_LIBRARY_PATH; go to cil-1.x.x;
+          configure the cil_cpp using configCMD; try bin/cilly or obj/x86_LINUX/cilly.asm.exe
+
+:
+
+*Running GIRA:*
+
+1. - if the target code contains header, such as <iostream>, using "g++ -E cpp_test.cpp > cpp_test.whole.cpp"
+2. - generate lowered code: "cilly --nokeepunused --chrome --enableCompilation --coutputmode --out=cpp_test.chrome.c cpp_test.whole.cpp"; or "cilly.asm.exe --nokeepunused --chrome --enableCompilation --coutputmode --out cpp_test.chrome.c cpp_test.cpp"
+
+:
+
+*Messages:*
+
+1. - Unbounded package, e.g., this package is not found. Reason: upgrade from 1.1 --> 1.5
+2. - The Makefile of gira_edg is for 64 bits machine, change it for 32 bits. 
+
+
+Group: Experiments
+Things related to regression and experiments
+
+Topic: Run Merged Code
+Merged code and SpecTackle
+
+1. Generate merged code using makeCapture (Nadia and Gogul)
+
+2. Adding stubs to merged code
+diver/src/script/makeRTV.rb (d2) -p(s/m/a) rtv-p...
+
+3. Generate preconditions for checkers except memory leak checker
+~nmaeda/work/SpecTackle/trunk/bin/cilly (Varvel's spectackle is ok too) --do-spec --fsoftFile=specP.h rtv-p...
+
+4. Check results
+~nmaeda/bin/inv.rb (check failures)
+~nmaeda/bin/witf.rb (generate html report)
+~nmaeda/bin/remove_dup_wit.rb (remove duplicated bugs)
+
+
+Group: MPI Related
+All projects related to MPI based distributed system.
+
+file:///home/st/weihong/Projects/MPI/NEC-MPAPI/html/index.html
+
+Topic: Distributed BMC
+~/Projects/MPI/FSoft_MPI
+
+1. Make it compiled with fsoft:
+
+There are some conflict between fsoft libmem.a library and MPI memory management. To solve this problem, redefine the mem related funcs in share/memory/ptmalloc/ptmalloc.h and  share/memory/ptmalloc2/malloc.h and regenerated LAM-7.1.2
+
+2. The Sync_branch related:
+
+The location is "/storage/weihong/Projects/varvel_sync/sync_branch3.0_para/".
+
+The problem is "MC failed because of signal 11".
+
+Try to debug it using gdb by attach gdb to model_check after "sleep()" for a while.
+
+The problem is it did not work out with fork() to debug child process.
+
+3. Witness Generation for distributed MPI:
+
+The un-completed project is located at "~/FSoft"
+
+The idea is to do it in a batch way, check out fsoft_fl_cfg, and rename the witness filename based on the client id. 
+
+Check out the mpi_witness.sh at ~/Projects/MPI/FSoft_MPI/bugs/A_Hui_Cmn_VoiceRecog_String_Check
+
+4. Bug fixing:
+
+*The issue of Out of Memory of Reallocating 1M bytes*
+
+The problem is due to ut_realloc/realloc, it was failed on realloc(1M), but ok on realloc(2M/0.5M), or alloc(1M). Fixed this in ut_realloc() by checking the return value of c.
+
+The example can be found at ~/Projects/MPI/FSoft_MPI/diver/BMC_NF_PARA/Hui_Cmn_VoiceRecog_DicRegist_tmp, the command is [mpirun -x MPI_MAPPED_HEAP_SIZE=1000000000 n0,1,2,2,2,2,3,4,5 /home/st/weihong/Projects/MPI/FSoft_MPI/diver/verisol -f /home/st/weihong/Projects/MPI/FSoft_MPI/diver/BMC_NF_PARA/fsoft_fl_para.vrf]
+
+Topic: HVC DEMO
+~/Projects/MPI/HVC08-EXP-demo-hunters
+
+:
+
+check out the xa_ftp and run_ftp4. The useful evironment var is $LAMRANK
+
+check out the ~/Projects/DiVer_CVS/gui/ACEGUI/DemoGui.java for merging the 2 pics to 1. setOpaque().
+
+A Java demo with MPI settings
+
+*new location: /testing/results/malay_exp/HVC08-EXP-demo*
+
+Group: FUSION Related
+All projects related to dynamic analysis of concurrent(pthread) programs.
+
+Topic: Pthread Checking
+~/Projects/ACME
+
+:
+
+1. Basic Building Process:
+
+Instrument - instrument-fusion example.c
+Compile    - compile-fusion example.instr.c 
+Combined   - fcpxlate_edg4_0/bin/fusion-cc --c --input barrier01.c --savetmp -D_POSIX_C_SOURCE=200907L; the output is target and target.instr.c
+In a nutshell - define _GNU_SOURCE as in /usr/include/features.h, which will include everything for GNU extension. g++ -pthread *.c have _GNU_SOURCE automatically, and -DXOPEN_SOURCE=600 will work for pthread also.
+
+2. Run the target:
+
+inspect ./target 
+
+Options
+
+maxruns - the number of runs
+"-v 0" | "--targetTrace" - the backend and frontend output verbosity control
+"--race" - stop when data race is detected
+"--watchObj" - keep going when data race happend (just a warning)
+
+3. Regression:
+
+under regression/Makefile
+
+CHECK_EXAMPLES - add new examples under this var
+
+4. Add spinlock/rwlock/barrier:
+
+the following are the steps for change
+
+*. inspect-cmk/cil-1.3.6/inspect/fusion.ml,inpsect.ml, change the name of pthread APIs.
+
+*. inspect-cmk/src/inspect_fusion.cc, inspect_pthread.cc, add APIs for fusion APIs.
+
+*. call rwlock_init/spinlock_init for each API to handle static initializer.
+
+5. Debug Fusion:
+
+*. run inspect standalone mode, inspect --standalone
+
+*. run target in gdb. When debug multiple thread, use cont and ctr_c to switch???
+
+*. if debug fusion server, just run gdb inspect, set breakpoint and standalone. run target before/after gdb.
+
+Topic: API based smt checking
+~/Projects/ACME/csv/src/cpg
+
+Convert the string based smt check to API based.
+
+cssa2YicesAPI.cc - One-on-one mapping from string to API conversion.
+cmk/cmk_verify.cc - depends on the value of "cssa2YicesViaAPI", we use API or non-API version.
+
+Topic: Visualization via dotty
+~/Projects/ACME/inspect-cmk/bin and ~/Projects/Scripts/ACME/*.pl
+
+Convert the trace.log file into dotty file for analysis. 
+
+trace2dot_new.pl - Merge multiple contiguous events into a big event, suitable for long depth.
+trace2dot.pl - show every events, only works for short depths.
+
+Topic: CPG_CFG
+~/Projects/ACME/csv/src/cpg
+
+convert cpg to cfg. 
+
+Chao wanted the other way, from cfg->cpg
+
+:
+
+*File changed:*
+
+1. - cpgPrint.cc: print out the dot file into cfg format
+2. - cpgGraph.h: added a member function
+
+Group: Witness Generation Related
+All projects related to tbench package.
+
+Topic: TBench for C++ code.
+
+*Issues:*
+
+1. - Lowered Exception. There are two locations to show the exceptions; throw and catch. Have to 
+     consider which location to show for a particular example.
+2. - How to show witnesses related to virtual functions?
+
+*Information:*
+
+1. - GIRA PPT slides show the principle of the C++ lowering strategy.
+2. - Some experimental results located at: /testing/results/naoto/prakash/...
+    
+
+Topic: TBench of final model
+~/Projects/CFG_TBench_Load/diver
+
+:
+
+*Flow:*
+
+0. - Possible tbench flows include - A. called by MC w/o "&", B. called by MIX/SMT in batch mode.
+1. - For regular run, if "overflow" or "dead-end", logged in fsoft_fl.tbch.info.#(prop_no). if both
+     happened, generate fsoft_fl.csr.# and fsoft_fl.vrf.# for rerun MC to generate a new set of value
+     of variables by setting "otg_force_pi_flag 1" in checker.sh
+2. - If the simulation ran into dead end, it will try to simulate on final mode except - a. this is 
+     already simulating on final model. b. both "overflow" and "dead-end" happens. To simulate on 
+     final model, the dumped final model cfg will be loaded. This final model was dumped during the SA
+     when the line "tbench_wit_processCFG(cfg_cfg, TBCH_CFG_VERS_FINAL);" is executed (this line 
+     should be moved out from "static_analysis_do_write_blif_model()" for the MIX/SMT/BMC_NF). 
+3. - If the dumped final model was failed to be loaded (by a child process forked by main thread), 
+     continue regular SA to obtain the final model. Otherwise, a new simulation on final model will 
+     be conducted. Note: this simulation may still lead to a dead-end (dead-end on FINAL mode).
+
+*Ideas:*
+
+1. - Load the model from dumped CFG file.
+2. - Generate HTML/XML file from the simplified CFG
+3. - For final model, always refer back to the original model?
+
+*To-DO:*
+
+Run regression testing on the change.
+
+Topic: Witness Generation for Static Analysis
+~/Projects/BUG_FIX_TI_178/diver/src
+
+This is used to generated witness HTML files before model checker. The idea is to log down potential witnesses bound by SA. pBench package is created by Sriram to collect related info, and tbench_wit_error_block_static_analysis_warning() is written to output witness in HTML format. 
+
+:
+
+Currently, all witnesses found by SA are stated with 100000+error_num. One thing needs to be done is later on, when MC found a witness for these properties, we should remove the warning witness HTML from the list.
+
+Topic: Witness Generation for TESSA
+~/Projects/CFG_Serialization/diver_tessa/src/ and ~/Projects/FRANJO/diver/src
+
+The latest code is in ~/Projects/FRANJO/diver. The example is in ~/bugs/franjo/float_main
+
+Topic: Func Call Statistics
+~/Projects/BUG_FIX_TI_178/diver/
+
+This is a new feature under macro "TBCH_FUNC_CALL_STATS"
+
+The basic idea is to log down the deepest and bug func call for both original and final model.
+
+*Assumptions for original call stack:*
+
+1. - the function will not call itself.
+2. - if a block is in a different func as its parent, if the function name is not its adjacent func in the call stack, it will be considered as a new function call.
+
+*Assumptions for final call stack:*
+
+1. - the final call is independent from the original one.
+2. - if a block is in a different func as its parent, look back N (=2) adjacent funcs in the call stack. If it is not in one of them, this block will be considered as a new function call.
+
+*Reasons for assumptions:*
+
+1. - For the final model, the entry block or exit block of a function may be merged or removed.
+2. - It is useless to relate the final block with the original one. (?)
+
+Topic: Weakest Precondition Simplification
+~/Projects/BUG_FIX_TI_178/bugs/summary
+
+(begin code)
+i tried making it smaller, but even then it looks terrible: :)
+
+~ivancic/examples/summary/small.run
+
+the second run is the one that matters... (that is , witness in foo_0)
+(end code)
+
+*Comments:*
+
+No solution yet, one possible way is to make sth like "pi_0_at_step_xx > 5" ? 
+
+Group: SA New Features
+All projects related to enhance SA.
+
+Topic: Sync_branch 3.0 New Feature
+/storage/weihong/Projects/varvel_sync/sync_branch3.0/
+
+Incoporate the BMC_NF into this version.
+
+Downloaded and compiled on d3, run 3 examples, huicmn, nvstats and imutils.
+
+Huicmn and nvstats were failed, the results are in /testing/results/HBMC/results/*/test_sync_branch_30
+
+The trac item is 1326.
+
+Topic: CFG Serialization
+~/Projects/CFG_Serialization/diver
+
+:
+Debug:
+
+Copy the three files
+(begin code)
+cfg_backup_load.y .
+cfg_backup_load.yacc.c .
+cfg_backup_load.lex.i .
+(end code)
+to the diver folder and then gdb.
+
+:
+*To compare the results*
+
+1. - cat *.dmp |awk '{print FNR " " length}'
+2. - cat *.dmp |awk '{ if (FNR == 100) print $0}'
+
+:
+*Comments from before*
+
+(begin code)
+	* write a lex file, such as t.lex, compile it using flex
+	* write a syntax file, such as t.y, compile it using bison. 
+	* If there is conflicts, using bision -v t.y , the error msg will be output to t.y.output
+	* to generate the executable, using gcc t.tab.c lex.yy.c
+	* Comments on .y syntax:
+		*. If we know the order of the output format, just use sth like - cfgCFG: cfgVarAll cfgFunction cfgBB cfgAsmpt cfgWrapper;
+		*. If there is a field defined under a macro, using sth like - cfgFuncIPA: COMMA intValue COMMA intValue | {};
+		*. For an array, define as: arrInt: NULL_PTR | LINDEX arrNUms; arrNums: arrNum arrNums | RINDEX; arrNnum:...
+		      so that the order of the array is kept.
+	* Comments on CFG_CFG
+		*. the top_vars is only consisting of CFG_VAR, the CFG_PTR_VAR is pointed by CFG_VAR, which has the same address of CFG_PTR_VAR::current
+		*. the CFG_ARY_VAR is pointed by CFG_PTR_VAR, which is pointed again by CFG_VAR, take a look at the output of the CFG_CFG file
+		*. after the model is built, only CFG_SRC_LOC is used for CFG_AST
+										
+(end code)
+
+
+Topic: PI CONST FOLDING
+~/Projects/Sriram_LU_Slice/diver
+
+:
+
+*Requirement:*
+
+1. - input is the error blocks and unresolved reasons.
+2. - output is to update XML with "unresolved" to those blocks and to slice the model operation based on the error blocks.
+
+Topic: LOOP UNROLLING
+~/Projects/Sriram_LU_Slice/diver
+
+http://nectwiki.nec-labs.com/twiki/bin/view/Verification/CFGLoopUnroll
+
+:
+
+*Current Status of LU*
+
+Target is to find a way to improve the regression testing to 10% more bugs.
+
+[10.30.2008]:
+*PI arithmatic simplifciation:*
+* The goal is to get rid of some variable because of the arithmatic with pi_x variable.
+* The problem that (pi_0 + var_xxx + 2) could not be identified is because of the ( ), which is a *primary* expression.
+* This also bring the *problem* of loading CFG before the MERGING stage: the loaded CFG could not merge the expression to form "(pi_0 + var_xxx + 2)"
+
+[10.09.2008]:
+*Discussion with Franjo:*
+
+A. -  Implement the Pi_0 + xxx simplification.
+B. -  Run with MIX SA and MC
+C. -  Add the nested loop statistics and others? a + b + c = total?
+
+[10.07.2008]:
+*Ideas:*
+
+Check the timeout properties in MC, figure out what is the reason of timeout for those error blocks, is it because of the loops in front of those error blocks? 
+
+[10.06.2008]:
+*Rerun the regression and Observation:*
+
+issue - did not prevent "default" run from simplifing the loops.
+03_N___cfg_copy_tophalf - proved? wrong from b4cg.dot => afterIPA.dot
+03_S_cfg_add_line - much simplier compared to default on blocks.dot
+
+
+[10.02.2008]:
+*Discussion with Franjo:*
+
+Done. -  fix the PI problem for both UIconditions and sum + () form.
+
+[10.01.2008]:
+*Report Improvement:*
+
+Done. - Added the numbers of both loop unrolled and total loops.
+Done. - Filter out those cases: 1. - the above #s <= 0; 2. - Property mem out/time out = 0;
+
+
+[09.30.2008]:
+*Discussion with Franjo:*
+
+* Try loopSimplification, both code and examples.
+1. - The IPA can simplify PI assignment, but not UIconditions expression.
+2. - For PI assigment, it cannot simply the form like, var_i + ( a : 0 : pi_0). Namely, more than ConditionalShift expression.
+
+* Try IPA-LoopSimp-LoopUnroll-IPA-LoopSimp circle.
+* Try move PI outside of the loop, also error blocks outside of the loop.
+
+[09.29.2008]:
+*Tasks:*
+
+* Try to move PI summation outside of the loop.
+
+* Check loops in regression cases, for non-array bounday checker.
+
+* check why for A/DicRegist/ the unrolled can find one more bug (faster). - [result_loopUnrollExperiments_091808/01_huicmn/A/Hui_Cmn_vliceRecog_DicRegist]
+
+* finish the non-share error block report consistence.
+
+[09.26.2008]:
+
+*Testing :*
+
+Run the regression test with two new things,
+
+A. - reduced time, from 1800s to 600s
+B. - bug fixing on [09.25.2008]
+
+*How to get good results from loop unrolling or loop simplification / summary :*
+
+* check all possible simple loops in the regression test 
+
+1. - 02_nvstats/A/main_0: short loop with 4 blocks.
+
+2. - 02_nvstats/A/do_current: short loop with error blocks inside.
+
+3. - 02_nvstats/A/proc_stats: a pattern is FOUND (block 211-213-219), should be summarized!!!
+
+* try a simple example to merge PIs and bring it outside of the loop and simply the loop
+
+* look at the source code of the examples.
+
+* check why for A/DicRegist/ the unrolled can find one more bug (faster).
+
+*Observations :*
+
+A. - for any loop with error blocks, no summary blocks can be obtained to replace the loop.
+
+B. - for any loop with more than one exit blocks, no summary blocks can be obtained.
+
+
+[09.25.2008]:
+
+Done - Fix the bugs in /fsoft/fsoft/testing/results/result_loopUnrollExperiments_092408/benchmark1.0b/errors by disable the loop unrolling for those loops with two consective error blocks.
+ 
+Results - Fix most of bugs, messed by error blocks's next array in loop_unroll.c, but we still have one where two error blocks are connected to each other, see the case "benchmark1.0b/03_imsutils/LU_1/S/fsoft_lu_d4_S_1222273176/cfg_add_line"]
+
+Done - Find more loop patterns by using [grep "===" `find ./ -name fsoft_fl.bll` | grep -v "Found 0" | grep -v "Found a pattern" > loops]
+
+Comments - See the above part for details.
+
+*Testing of LU*
+
+The scripts, location and macros
+
+Testing and checking scripts:
+   * To run the testing, use the script ~fsoft/TESTDATA/benchmark1.0b/run_loop_unrolling.sh & loop_unrolling_test.sh,
+     Change the ~fsoft/bin/fsoft_lu for binary. Change the run_loop_unrolling.sh to set the output folder. Use
+	 loop_unrolling_test.sh to run batch mode.
+   * To check the result, use the scripts under the foler:
+      /fsoft/fsoft/testing/results/result_loopUnrollExperiments_091808/benchmark1.0b/
+	 To check segmentation fault, use
+	 ~fsoft/scripts/findErrors
+	 All the above scripts can be found at: ~/Projects/Scripts/loop_unrolling/
+   * For the final csv file, use macros of VBScript under D:/liwh/NEC/work/loop_unrolling/
+
+
+Topic: HBMC PB & PG
+~/Projects/Malay_Context/diver
+
+:
+HBMC Path Balancing and Property Grouping
+
+:
+*Re-run some of the regression:*
+(begin code)
+bmc_all_sch_40_60
+bmc_I_II_III_all
+bmc_I_II_III_all_cxt_3
+bmc_II_III_pb_sim
+bmc_I_III_pp_sim
+bmc_III_sim_only
+bmc_I_pg_only
+
+smt_all_sch_1 with range info
+smt_all_sch_2
+(end code)
+
+:
+*Observations:*
+
+1. - the function cfg_smt_context_2_bmc() has already called PB followed by PG, and then dump the blif files for each sub-group.
+2. - the function cfg_smt_context_2_bmc() and smt_dump_verisol_model() cannot co-existing.
+3. - not sure whether CSR is introduced or not.
+
+*Regression Testing:*
+
+(begin code)
+The foler is at:
+/testing/results/HBMC/
+run/notify_run will send an email containing timing info once it's done.
+we can try a small test example before regression testing. e.g., ~/Malay_Context/bugs/temp/tt
+
+Common setting in fsoft_fl.vrf
+"set mes_use_group_info 1"  #for bmc group
+"echo "	-m 8000 -c $FILE_PREFIX.cnt -p $PROPERTY_FILE -s $MES_SCHEDULE_FILE -o fsoft_fl_cfg -S $MES_PARAM_FILE $BLIF_FILE" >> $verifFile" # for bmc group
+(end code)
+
+I. - Property grouping + Seperate Models (BMC) 
+(begin code)
+Enable:
+hpc_overlap_loop_flag 0
+hpc_overlap_threshold 0.5
+
+Disalbe:
+hpc_overlap_loop_flag 1
+hpc_overlap_threshold 0
+
+(end code)
+
+II. - Path Balancing (BMC) 
+(begin code)
+Enable:
+hpc_pb_flag 1
+hpc_cxt_flag 1
+
+Disalbe:
+hpc_pb_flag 0
+hpc_cxt_flag 0
+
+(end code)
+
+III. - Simplification 
+(begin code)
+Enable:
+BMC_1 sat_block_constraint 1
+BMC_1 sat_block_flow_constraint_fwd 1
+BMC_1 sat_block_flow_constraint_bwd 1
+BMC_1 sat_block_flow_constraint 1
+BMC_2 sat_block_constraint 1
+BMC_2 sat_block_flow_constraint_fwd 1
+BMC_2 sat_block_flow_constraint_bwd 1
+BMC_2 sat_block_flow_constraint 1
+
+(end code)
+
+* 5 group of testing
+I, III, I+III, II+III, I+II+III
+
+* Report Generation:
+
+see "~/Projects/Scripts/smt_bmc/prop_result.pl", the main thing is a hash of arrays for property comparison.
+
+Group: HBMC and MIX Integration
+~/Projects/hunters_SMT_MIX/diver
+
+Regression testing on Sync
+
+The description of the combination of HBMC and MIX
+
+1. The source code:
+
+The source code locatd at
+
+/storage/weihong/Projects/varvel_sync/sync_d3/sync_branch/src/fsoft_bin
+
+The reason 
+
+*. We want to have the same front-end model for comparison between HMC fsoft binary and previous varvel BMC_NF, HBMC, BMC, and MIX runs.
+
+*. The varvel backend was converted to fsoft front-end, mix and mixSym were linked from ~/Projects/hunters_SMT_MIX folder, but ssh package is a copy from the folder.
+
+For the settings in source code
+
+*. To change the priority score, change the value in pq_insert_new_node().
+
+*. For the backward computing, check mix_verify.cc::getRankInBackwardRings().
+
+*. Grep the flags in the code to review each settings.
+
+2. The experiments:
+
+2.1 The new settings and tunings for the experiments:
+
+set mix_verbose 0                /* No OnionRing computation, save half of memory*/
+
+set mix_maxDisjIte 2             /* Over-approximated, maxinum model 2 ITE expression */
+
+set mix_widenMinPoly 1           /* Only 1 polyhedran allowed for backward image computation */
+
+set mix_maxBwdTime 60            /* Time limited for backward image computation */
+
+set mix_trMinPoly 20            /* Not available */
+
+set mix_backwardFixpoint 1       /* Enable/Disable backward image computation */
+
+set mix_BoolBwdFixpoint 1        /* Only consider control states when doing backward image computation */
+
+set cfg_update_props_from_file 1 /* Update MIX error blocks, loaded from fsoft_fl.vs.prp (hard-coded) */
+
+2.2 The experiments and log files:
+
+The experiments are located at "/testing/results/HBMC/HMC_runs/"
+
+Folders
+
+smt_mix_icfem - all experiments.
+smt_mix_icfem_2 - all experiments.
+smt_mix_icfem_mix - mix run only
+
+old runs
+
+smt_mix_dfs - DFS run
+smt_mix_bfs - BFS run
+smt_mix_hbmc_only - HBMC only
+smt_mix_key - Keynodes based
+
+Scripts
+
+prepare_icfem.pl - copy all updated configure files to each function.
+folder_list - specify which functions to be run.
+run - run the experiments.
+
+Best results logs (no backward):
+smt_mix_icfem/01_huicmn_A_Hui_Cmn_VoiceRecog_DicRegist/smt_mix.d3.7_17_09_hmc_dfs_bwd.log.*
+smt_mix_icfem/06_ftptests_A_main/smt_mix.d4.nec-labs.com.7_19_09_hmc_dfs_no_bwd.log.*
+smt_mix_icfem/03_imsutils_A_get_wellknown_name_by_sid/smt_mix.d4.nec-labs.com.7_19_09_hmc_dfs_no_bwd.log.*
+
+2nd results logs (with bwd):
+smt_mix_icfem_2/01_huicmn_A_Hui_Cmn_VoiceRecog_DicRegist/smt_mix.d3.7_20_09_hmc_dfs_bwd_last.log.*
+smt_mix_icfem/01_huicmn_A_Hui_Cmn_VoiceRecog_DicRegist/smt_mix.d3.7_20_09_hmc_dfs_bwd_last.log.*
+
+3nd configure 2:
+smt_mix_icfem_2/01_huicmn_A_Hui_Cmn_VoiceRecog_DicRegist/smt_mix.d3.7_19_09_hmc_dfs_mix_config_2.log.*
+smt_mix_icfem_2/06_ftptests_A_main/smt_mix.d3.7_19_09_hmc_dfs_mix_config_2.log.*
+
+4th configure 1:
+smt_mix_icfem_2/smt_mix.d4.nec-labs.com.7_18_09_hmc_dfs_mix_bo_disj.log.* ( maxDisjIte 2)
+smt_mix_icfem_2/smt_mix.d4.nec-labs.com.7_17_09_hmc_dfs_mix_boolonly.log.* ( maxDisjIte 0)
+
+3. The reports:
+
+3.1 The perl scripts written to create the reports:
+
+stat_paper.pl - mine the data from all kinds of log file. Manually change log file pre-fix to generate report for each function, and then cat them to an entire report.
+
+3.2 The usage of the scripts:
+
+Parameters to be set
+
+$root_dir - the path to the run
+$all_examples - the function name
+$test_items - the folder containing the runs
+$hash_ti_type - 1. hmc, 2. hbmc, 3. mix
+$log_name - the prefix for the log file name
+
+
+
+* Compile sync_branch/fsoft to fsoft binary to keep the same frontend, the existing folder is /storage/weihong/Projects/varvel_sync/sync_d3/sync_branch/src/fsoft_bin/fsoft
+
+* The testing results are in /testing/results/HBMC/smt_mix(...). The reports are in d:/liwh/NEC/work/hbmc_mix_report/
+
+* Several scripts are used for testing, they are stored in ~/Projects/Scripts/hbmc_mix/sync
+prepare.pl - set up the configuration files for all examples.
+stat_exec.pl - mine the results from the log file.
+stat_paper.pl - mine the data to generate the report files. The mix part has two flow, one is a regular mining, which has the mix final report. Another one doesn't terminate normally, which has to mine the data based on intermediate outpout.
+run - run all test cases. Check each run to understand the settings.
+
+* folders
+
+smt_mix_icfem - hbmc only/mix backward experiments
+smt_mix_icfem_2 - combination experiments.
+smt_mix_icfem_mix - mix run only
+
+:
+
+:
+
+Combine HBMC and MIX
+
+
+[07.16.2009]:
+*Tuning with Chao:*
+set mix_maxDisjIte 2
+set mix_widenMinPoly 1
+set mix_maxBwdTime 100
+set mix_trMinPoly 20
+set cfg_update_props_from_file 1
+
+
+[12.22.2008]:
+*Discussion with Chao:*
+
+1. - MIX first run (widening) "proof" means real proof.
+2. - MIX first run "witness" means nothing.
+3. - MIX second run witness should be followed a concretization operation.
+
+[10.06.2008]:
+*Observation:*
+
+1. - there are a lot of more witnesses in the A/DicRegist/DFS with loops.
+2. - for better report, use results.mes, instead of fsoft_fl.vrl (but no depth info in results.mes).
+
+[10.05.2008]:
+*Re-run the regression testing after bug fixing on [10.02.08]*
+
+1. - changed ssh_exec.c/ssh_check_loops(), problem there are 2 blocks (#1) in ordered_blks. 
+2. - changed ssh_exec.c/ssh_loop_store_other_nodes(): ASSERT( array_n(arr_curPCs) >=  1);
+
+[10.02.2008]:
+*Re-run the regression testing*
+
+A. - the hui_cmn test case has been changed.
+B. - bug fixing??? 
+
+[09.22.2008]:
+
+* loop locations and filtering, only deal with simple loops.
+* bugs - fixing bugs in /storage/weihong/testing/results/hbmc_mix_results_922/errors
+1. - Assertion Errors (MB)
+2. - Internal Errors (MC)
+
+[Implemenations]:
+
+1. - Bounded Frontier image computation.
+
+This one computes the image forwarding based on a new Transition Relation (TR) which is obtained for each iteration. This TR is computed for the depth d to d+1. 
+If the # of polys in the state s contains is greater than a threshold, this s is split (inside), and then s is taken for image forwarding computation.
+
+2. - Bounded computation with disjunction of transition relations 
+
+In this case, the TR is break into an array of sub TRs, and then the state s is computed on each element of this array. The final result is unioned to update the s for next iteration.
+
+3. - Bounded computation with disjunction of transition relations and state space
+
+This is based on 2, which not only splits the transition relation TR, but also splits the state variable s if the symbolic is too big. The final state s of each iteration is obtained via the union of all the sub results.
+
+4. - Bounded computation with priority queue. (SSH)
+
+This is our current implementation using the priority queue to store the states. It checks whether the image computation reaches any error block or not. It also checkes the loops in the CFG (we did some experience on loops, ie. image computation on loops only, other nodes are held until quitting the loop). The TR is the same as the above (disjunction of TRs). The state s is picked up from the priority queue and the new computed s is inserted into the queue based on the heuristic metric, which is depth by default.
+
+
+* performance comparison
+_ - no way to compare yet because of the bugs: the report csv missed some rows (run data_poly_size)
+
+*Testing of HM*
+
+Testing and Checking Scripts:
+	* To run the testing, use ~fsoft/TESTDATA/benchmark1.0b/run_hbmc_mix.sh & hbmc_mix_test*.sh
+	  Change the ./TESTDATA/benchmark1.0b/bin/checker_hbmc_mix.sh & fsoft_hbmc_mix to change the binary and script.
+	  The output folder is under 
+	   /storage/weihong/testing/results/hbmc_mix_results_908/hbmc_mix_results__*** according to run_hbmc_mix.sh
+	* To check the output results, run ~/Projects/Scripts/hbmc_mix/data_xxx to generate the .csv file
+	  The VBScript macro is located at D:\Liwh\NEC\Work\hbmc_mix_report
+
+
+The flow graph is as follows. ( PPT is in d:/liwh/nec/work/hbmc_mix.ppt )
+
+(see hbmc_mix_slide1.png)
+(see hbmc_mix_slide2.png)
+
+Group: Varvel Related
+/storage/weihong/Projects/varvel_sync/sync_branch/
+
+The repository in Japan
+
+Twiki Link:
+
+http://nectwiki.nec-labs.com/twiki/bin/view/Verification/NSoftSubVersion
+
+Things for Regression Run:
+
+1. - correct libverisol.a (smt/bmc_nf/bmc), change the soft link.
+2. - correct libfsoft.a (smt/bmc_nf)
+3. - correct binaries (cp exe to ./bin/)
+4. - correct config files, including model_build.conf, model_check.conf, param.mes, schedule.mes
+
+Japan report for varvel
+
+(begin code)
+   158  12:12   rm -rf varvel workdir.SPRINTF
+   159  12:12   new_repro.SPRINTF.sh
+   160  12:13   ls
+   161  12:13   rm doit-summary.log.SPRINTF rep.txt.SPRINTF
+   162  12:13   mv varvel varvel.SPRINTF
+   163  12:13   setenv TP /fsoft/nsoft/headbuild/fromJapan/TP
+   164  12:13   ls $TP/v-doit-summarize-NECLA.sh
+   165  12:13   $TP/v-doit-summarize-NECLA.sh
+   166  12:13   l
+   167  12:13   $TP/v-doit-summarize-NECLA.sh SPRINTF
+   168  12:13   l
+   169  12:14   more rep.txt
+   170  12:14   more rep.txt.SPRINTF
+   171  12:14   diff rep.txt.SPRINTF rep.txt.PICF
+
+   $TP/result-all-sync-NECLA.sh SPRINTF
+   $TP/report_comparisons_NECLA.pl 
+
+benchmark = common TP
+
+Compile on CentOS 5.4 machine (naxos)
+
+cd /testing/results/BMCNF_4varvel/benchmark
+Example
+
+ run_vvl_condor.sh -s SNAP_3_BMCNF_SET_7 -r SNAP_3_BMCNF_SET_7 -o
+"--bmc_nf" -d
+/testing/results/BMCNF_4varvel/binaries/VARVEL/snapshot_3/bin.CentOS-54
+
+run_vvl_condor.sh -s <TEST_STRING> -r <TEST_STRING> -o "$EXTRA_OPTIONS" -d
+$VARVEL_BIN
+
+THis will create a file called condor_submit_file.all.TEST_STRING.<someNum>
+
+condor_submit condor_submit_file.all.TEST_STRING.<someNum>
+
+tail condor_submit_file.all.TEST_STRING.<someNum>.*.log
+----------------
+
+varvel_TP
+
+cd /testing/results/BMCNF_4varvel/varvel_TP/scripts/VARVEL
+
+v-run-new-CONDOR.pl [--test-string|--tag|-S] <test string>
+    [--directories-file|f|F] <directories file>
+    [--match-pattern|m] <match-pattern>
+    [--index|i] <index>
+    [--extra-options|o] <extra options>
+    [--bin-dir|b] <bin directory full path name>
+
+example:
+v-run-new-CONDOR.pl  --tag SYNC_BRANCH_TEST -f redo.txt --extra-options
+"--bmc_nf" --bin-dir
+/testing/results/BMCNF_4varvel/binaries/VARVEL/sync_branch3.1_sync/bin [-r
+]
+
+That assumes redo.txt is in
+/testing/results/BMCNF_4varvel/varvel_TP/results/VARVEL
+and everything runs properly on CentOS 5.4
+
+If you omit -f redo.txt, it will use alldirs.txt in above directory
+
+If you add the -r option it will create a rerun script
+
+You will have one big condor_submit.SYNC_BRANCH_TEST.XXXX file
+condor_submit ondor_submit.SYNC_BRANCH_TEST.XXXX
+
+and monitor the logs at
+/testing/results/BMCNF_4varvel/varvel_TP/results/VARVEL
+
+If you want to run sequentially, then you need to run v-run-new-NECLA.sh
+-s SYNC_BRANCH_TEST -f redo.txt -b
+/testing/results/BMCNF_4varvel/binaries/VARVEL/sync_branch3.1_sync/bin -r
+-o "--bmc_nf"
+
+To get the OK->TIMEOUT cases and put them in the redo.txt:
+grep 'OK->TIMEOUT'
+/testing/results/BMCNF_4varvel/varvel_TP/reports/VARVEL/SYNC_BRANCH_TEST/SYNC_BRANCH_TEST_vs_BMCNF_3_SET_3.txt
+| awk -F":" '{print $3}' | sed "s/\.\///" > redo.txt
+
+To generate this report again
+cd /testing/results/BMCNF_4varvel/varvel_TP/results/VARVEL
+
+result-all-sync-NECLA.sh SYNC_BRANCH_TEST
+report_comparisons_NECLA.pl -s BMCNF_3_SET_3 -s SYNC_BRANCH_TEST
+
+*** New Scripts (Two Step Flow) ***
+ll | grep -e TwoStepFlow -e BMC
+cp do_run.sh do_run_SB_3.sh
+result-all-sync-NECLA.sh SB_3_SYNC
+report_comparisons_NECLA.pl -s SB_3 -s SB_3_SYNC | tee SB_3_vs_SB_3_sync.txt
+
+Submit CTP jobs:
+SB3.sh
+condor_submit condor_submit_xxxx ||OR|| submit_all_condor(TwoStepFlow)
+check_failures.pl -h
+check_failures.pl -s SB_3_SYNC
+check_mc_failures.sh -h
+
+
+======
+
+cd /testing/results/BMCNF_4varvel/benchmark/scripts/VARVEL
+v-create_reports.sh [-h] [ -c|-r ] [-m] -s <tag> -x <tag_to_compare>
+ run without options will create and mail reports
+ -s <tag> reports for fsoft directories matching this tag
+ -x <tag_to_compare> reports comparisons with this, default is SNAPSHOT_1
+ -m mail reports only
+ -e echo what you will do only
+ -c or -r create reports only
+ -D </top/directory/before/results>
+ -S <full/path/name/for/scripts/dir>
+ -R <full/path/name/for/results/dir>
+
+For example
+v-create_reports.sh -s SNAP_3_BMCNF_SET_3 -x SNAPSHOT_1 -c &
+This will create
+/testing/results/BMCNF_4varvel/benchmark/reports/VARVEL/SNAP_3_BMCNF_SET_3
+directory and populate it with a set of reports.
+
+For ruby (only TP benchmark)
+cd /testing/results/BMCNF_4varvel/benchmark/tools
+sh make_report_list.sh SNAP_3_BMCNF_SET_3
+THis outputs csv format on stdout, which means you save output into >
+../reports/VARVEL/SNAP_3_BMCNF_SET_3/ruby_report.csv
+
+
+(end code)
+
+To Build:
+
+sh prepare.sh; make; (Makefile of all is a clean make, use non-clean Makefile afterwards)
+
+link binaries (needed?) ~ivancic/bin/useVarvelSynch
+
+compiled on zagreb ... ok. -> type "make" under folder of sync_branch
+
+for tbench, tbench -> vvl_tbench. when checkin, may need to re-check out tbench?
+
+If some file is missing, check the link:http://10.17.225.57/varvel/trac/browser/trunk/, product2.1 or product2.2
+
+To output the debug files:
+
+export __VVL_WORKDIR=`pwd`/work
+
+Debuging:
+
+- Code Change ***
+
+The fork() make the gdb un-predicatble.
+
+edit src/model_building/mb_main.c, change this multi-process code to single process
+
+comment out the fork(), and let the child process be the real flow: if (mb_cpid == 0) -> if (1);
+
+- gdb command ***
+
+check out mb_gdb.sh for "gdb ..."
+
+check out mb_gdb_cmd.txt for parameters after entering the gdb
+
+check out create_mc_result.sh for tbench debugging.
+
+check out mb.sh for regular run.
+
+The output of the debug is in mb_out.txt
+
+DbyC Fsoft & Sync_branch:
+
+1. To debug DbC of sync_branch on FSoft, do the following,
+(begin code)
+       f (x) {
+	 ...
+	 g(x);
+	 ...
+	 g(x);
+       }
+
+==>
+	1. remove g(x) from f(x);
+	2. transform f(x) to 
+	f (x) {
+	  assume(preconf_x);
+	  ...
+	  assert(preconf_g);
+	  x = pi;
+	  assume(postconf_g);
+	  ...
+	  assert(preconf_g);
+	  x = pi;
+	  assume(postconf_g);
+        }
+(end code)
+
+2. To debug mem related issue, use valgrind
+
+    valgrind --tool=memcheck  --db-attach=yes ~/Projects/BUG_FIX_TI_178/diver/fsoft -xf fsoft_fl.gbl
+
+3. To diff two folder use
+
+(begin code)
+diff -r --exclude=.svn --exclude="*.yacc.c" src ../../src
+tar --exclude .svn --exclude CVS -c -v -f xxx.tar .... .... .... 
+rm ./--exlude or rm -- --exlude
+(end code)
+
+4. To deal with large output pipeline command, use
+
+(begin code)
+find / -name "xxx" |xargs ls -a
+(end code)
+
+5. To run a particular checker of a particular function of a particular example, use
+
+(begin code)
+./run_frontend_sync.sh -X "--bmc_nf -T 700" -Y "bmc_nf_sync_expr_1_24_err_out_1_2nd" -c S -b nvstats -x s -f main
+
+(end code)
+
+6. To generate report using rr.jar, do this
+
+(begin code)
+java -jar ~nmaeda/tmp/rr.jar -C vvl
+(end code)
+
+
+
+Topic: Source Control
+
+refer to /storage/weihong/subversion/backups/scripts/*.sh
+
+1. - Obtain a latest revision R from sync_branch.
+2. - Create a local repository L based on R.
+3. - Work on project using repository L.
+4. - Update between L and R by swapping .svn folders for each package (subfolder).
+
+All .svn are saved in /storage/weihong/subversion/backups/ with Revision # and date information in README.
+
+Implementation:
+
+(begin code)
+# The basic idea is to create an intermediate repository for source control
+# The flow is like this:
+# 1. check out the latest version V1 from A.
+# 2. create a local repository B using V1.
+#    2.1: svnadmin create REP_NAME; chmod g+w -R REP_NAME(this will enable other full-access for other accounts).
+#    2.2: call svn_backup.sh to backup all .svn and folder structure of V1.
+#    2.3: do "svn co file:///path/to/REP_NAME ./" in V1 with .svn moved to backup folder.
+# 3. work on local space by checking out and commiting on B.
+# 4. Once the local job is done locally, sync the latest version V2 in B to A.
+#    4.1: remove all .svn folder in each folder of V2.
+#    4.2: copy all .svn folder from V1 to V2.
+#    4.3: svn update on V2 and resolve any conflict.
+#    4.4: check in the code to A.
+(end code)
+
+
+Topic: HBMC
+/storage/weihong/Projects/varvel_sync/sync_naxos/sync_branch
+
+:
+*UPDATES:*
+
+*. two seperate binary are located: 1. sync_branch2.1 2. sync_d3/sync_branch
+
+*. MIX are tested on 1, SMT on 2.
+
+*. New Things on 2 (not in 1, but should be in 1):
+
+(begin code)
+1. smt_model/cfg_dump_blif: add one more line
+2. varvel_controller/vc_main.c: enable range analysis.
+
+(end code)
+
+:
+*changes are made with respect to sync_branch/src/:*
+
+0. - compiling 
+
+>relink the lib folder to my local lib of fsoft
+
+1. - add the "--smt" option for the c_verify:
+
+>varvel_controller/vc_structure.h: add "isHBMC" in the VC_OPTION_INFO
+>varvel_controller/vc_main.c
+
+2. - add the smt script files for model building
+
+>change the hard-coded vc_main.c:InitPathForAnalysisGroup() "fsoft_fl.blf" and "fsoft_fl.prp"
+>change the mb_main.c:avl_insert(cmdFlagTable, util_strsav("cfg_dump_cdfg_flag"), util_strsav("1"));
+>change the parameter, ie., "-H 1/2" for model building.
+
+3. - add the smt script files for model checking
+
+>change the bin/config/model_check.conf, add "set.mes_hbmc_flag=1", use libverisol.a without "ped"
+>debug the MC by comment out the fork(), use command in the varvel/varvel.log 
+>change the config files in mc_main.c based on "mc_useVerisol"
+
+
+4. - tbench generation
+
+>add system() call in mc_main.c:mc_tbench_record_results().
+>to get correct top.xml, should call system() after tbench_record_results_cmd().
+
+
+:
+*issues or concerns:*
+
+1. - how to separate bmc script from smt script on the configuration file
+2. - how to call tbench after smt call
+3. - how to add the libyices.a file or a different libverisol.a
+
+Group: Bug Fixing Related
+Fix the trac bugs in twiki page.
+
+Topic: Trac 792
+/home/st/weihong/Projects/BUG_FIX_TI_178/bugs
+
+The integer overflow issue
+
+http://10.17.218.10/varvel/trac/ticket/792
+
+:
+
+*PI Assumption to Constraint:*
+
+1. - a lot of pi_xxx has been renamed. To keep track of them, log down the following info. A. 100_pi_0 -> 104_pi_0 -> 500_pi_5, and 104_pi_0 -> 47_pi_1, then, 100 pi_0 500 pi_5 and 100 pi_0 47 pi_1 are both logged. In this case, we are hoping that only one of then in both original trace and final trace up to the current pc value. 
+
+2. - to debug the merge related info, use "cfg_debugShowMergeDetails". 
+
+
+*PI Slice:*
+
+To be done.
+
+*PI Merge:*
+
+fsoft_fl.tbch.mrg - Keep track of the name change of pi_x in the model. This is complicated by cfgAssume as described in *<PI Assumption to Constraint>*. Also, some pi_x names could be changed multiple times.
+
+fsoft_fl.tbch.slc - Record the active variables in each basic block. This info is currently used in both the initial value and intermediate lookup. That is, we will check if a value is active in current block, if not, we will not load it even it is in the final trace (csv) file. Otherwise, it may affect the later assignment and simulation. 
+
+fsoft_fl.tbch.var - Record the value range of sliced variables. These will be a guidance for picking up a value for the simulation for the variable not in the trace file. If the range is a particular value, it will be used in the simulation, instead of value 1 by default.
+
+fsoft_fl.tbch.asg - Record the value (determinted by MB) of some special variables. For example, v = ITE(cond, v1, v2). If cond contains PI vars, v may be assigned a fixed value (such as 5) by model building. This information is logged and shall be loaded during witness generation. 
+
+fsoft_fl.tbch.blk - Record the equivalent error blocks. An error block is associated with a bunch of other error blocks. If any of these error blocks is reached during the simulation, tbench will claim that the error block is reached.
+
+fsoft_fl.tbch.map - Record the new basic blocks not shown in the original CFG model. These new basic blocks are created during the function inline process. For the simulation, if a basic block number is a new one, its corresponding old one will be used for simulation. In particular, it may be recursively mapping from new block to another new block. The final original block should be located eventually for simulation.
+
+fsoft_fl.tbch.cfg - Record the true guards of the modified CFG. In some circumstances, MB may change the UI conditions to TRUE and all the others to FALSE. These information has to be propogated to tbench for simulation. The current implementation is to modify original CFG at the beginning of the simulation and all the remaining stages are unchanged. 
+
+meminfo.ini - Record the value range of active variables. These will be a guidance for picking up a value for the simulation for the variable even it is in the trace file. If the range is a particular value, it will be used in the simulation, instead of value 1 by default.
+
+*VAR Value Range:*
+
+1. - if min_init_value > 0, use min_init_value
+2. - otherwise, if max_init_value > 0, use 1.
+3. - otherwise, use max_init_value.
+
+*Two Steps for Integer Overflow:*
+
+1. - add overflow checker with "long long" in the evaluateExpression function call
+2. - add Malay's script in the checker.sh & Controller
+
+*Status:*
+
+1. - tried the 3rd "dead-end" case on sync_branch: it failed because of compiling; it could not run on old binary. But there is no "dead-end" when running on checker.sh
+
+2. - tried "errno" for detecting signed integer overflow, end up withing a sigal handle solution, which is not desirable because it terminates the regular program execution. see file ~/port/of.c
+
+3. - "long long" should work for 32-bit machine, but what if 64-bit?
+
+*Solution:*
+
+1. - The solution is to add an extra constraint field in the UIconstraints.
+2. - Should change the UIconstraints access in loop_unroll
+3. - Add these extra constraints for BMC solver.
+4. - "-W" of the checker.sh will give a detailed list of the vrf file.
+5. - for MC, add "csr file", "Max depth", "Min depth", "extra constraints"
+
+(begin diagram)
+
+
+
++--------+  `
+|   MB   | 
++--------+  `
+    |	    
+    |	    
+    |	    
+    V
++--------+        +--------+
+|   MC   | -----> | Proved |-------------------------------------+
++--------+        +--------+                                     |
+    |                                                            |
+    |                                                            |
+    |                                                            |
+    V                                                            V
++---------+        +------------------------------+    Y     +-------+
+| Witness | -----> | Simulate on Original CFG ?   | -------> | Done  |
++---------+        +------------------------------+          +-------+
+                                    |
+                                    | N
+                                    |
+                                    V                                    
+                   +------------------------------+           N		     
+                   |    Add extra constraints     |---------------------+
+                   |  and call MC, find witness?  |                     |
+                   +------------------------------+                     |
+                                    |                                   |
+                                    | Y                                 |
+                                    |                                   |
+                                    V                                   V
+                    +----------------------------+   N   +------------------------+ 
+                    | Simulate on Original CFG ? | ----> | Simulate on Final CFG  | 
+                    +----------------------------+       +------------------------+ 
+                                    |                                    
+                                    | Y                                  
+                                    |                                    
+                                    V
+                                +-------+     `
+                                | Done  |
+                                +-------+     `
+
+(end diagram)
+
+
+*Steps:*
+
+A. - collect the bugs
+B. - add constraints
+C. - bmc re-run
+D. - tbench on the final model (NEW FEATURE)
+
+*Issues:*
+
+1. - when adding "OBJINFO_PTR_OVERFLOW_CNSTRNT" in the program, the constraint objects are changed because of the simplification. In other words, the mark is gone.
+
+Topic: TBench source file missing
+
+refer to /home/st/weihong/Projects/CFG_TBench_Load/bugs/fsoft_A_gfsctl/main
+
+requirement: make the *.c.html locally.
+
+:
+
+:
+
+
+*Varvel/FSoft CIL issue:*
+
+:
+
+When there is error related to stub, e.g., start fsoft on the intermediate files generated by Varvel, a function foo was not defined in the fsoft_fl.cfg, what we can do is the follows.
+
+1. put the define into fsoft_fl.i, and rename it to fsoft_fl.i.c
+
+#define fSfT__assert_with_original_expression(A,B) fSfT__assert(A) 
+
+2. recompile fsoft_fl.i, using
+
+gcc -E fsoft_fl.i.c > fsoft_fl.i
+
+3. rerun cparser like the following
+
+~/Projects/BUG_FIX_TI_178/cparser/cparser  -r -L fsoft_fl.fle -F 2 -I fsoft_fl.ini -t 1 -g fsoft_fl.gvd -P 1  -k fSfT__assume -k fSfT__assert -k fSfT_preconds_start -k fSfT_preconds_end -k fSfT__clearIterators   -k fSfT__get_lo__ -k fSfT__get_hi__ -k fSfT__array_length__  -e func1 -E fsoft_fl.mai  -s fsoft_fl.std -S fsoft_fl.stn  -p fsoft_fl.pre  -R fsoft_fl.ren  -f fsoft_fl.flt  -o fsoft_fl.cfg fsoft_fl.i > fsoft_fl.cpl
+
+
